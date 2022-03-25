@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Complete LinkedIn Bot Version 1.0.2 (2022)
+# Complete LinkedIn Bot Version 1.0.3 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -12,6 +12,7 @@
 # 17-Mar-2022 - 1.0.0 - Creating the linkedin connexion function.
 # 21-Mar-2022 - 1.0.1 - Creating the bot's structure.
 # 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
+# 25-Mar-2022 - 1.0.3 - Adding adding function (automatic).
 # 
 
 from dotenv import load_dotenv
@@ -69,8 +70,7 @@ class LinkedIn():
         choice = int(input(">"))
 
         while not 0 < choice <= len(self.search_options):
-            print("\n[x] Please select a number between {} and {}...\n".format(
-            1, len(self.search_options)))
+            print("\n[x] Please select a number between {} and {}...\n".format(1, len(self.search_options)))
             for i in self.search_options:
                 print(self.search_options["{}".format(i)][1])
             choice = int(input(">"))
@@ -82,18 +82,25 @@ class LinkedIn():
                 self.browser.get("https://www.linkedin.com/search/results/{}/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=KOm".format(
                     self.search_options["{}".format(i)][2], research))
 
+    def add_people(self):
+        research = str(input("What profession do you want to find?\n>"))
+        self.browser.get("https://www.linkedin.com/search/results/people/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=KOm".format(research))
 
-        time.sleep(3)
-        parentElement = self.browser.find_element_by_class_name(
-            "reusable-search__entity-result-list")
-        elementList = parentElement.find_elements_by_tag_name("li")
-        dict = []
-        # /html/body/div[6]/div[3]/div/div[2]/div/div[1]/main/div/div/div[1]/ul/li[1]/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a/span/span[1]
-        # /html/body/div[6]/div[3]/div/div[2]/div/div[1]/main/div/div/div[1]/ul/li[2]/div/div/div[2]/div[1]/div[1]/div/span[1]/span/a/span/span[1]
-        for i, elem in enumerate(elementList):
-            print(str(elem.text))
-        # child_parentElement = self.browser.find_element_by_class_name("entity-result__actions")
-        # child_elementList = child_parentElement.find_elements_by_xpath(".//*")
-        # dict.append(child_elementList.text)
-        # time.sleep(1)
-        print(dict)
+        buttons = self.browser.find_elements_by_class_name("artdeco-button")
+        for button in buttons:
+            time.sleep(0.5)
+            rand = random.uniform(0.6, 1.2)
+            if button.text == "Se connecter": 
+                time.sleep(rand)
+                button.click()
+                spans = self.browser.find_elements_by_class_name("artdeco-button__text")
+                for span in spans:
+                    if span.text == "Envoyer" :
+                        time.sleep(rand/2)
+                        span.click()
+            elif button.text == "En attente": 
+                print(button.text)
+
+    def scrap(self):
+        company = str(input("What profession do you want to find?\n>"))
+        self.browser.get("https://www.linkedin.com/search/results/people/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=KOm".format(company))

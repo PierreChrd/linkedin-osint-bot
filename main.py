@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# Complete LinkedIn Bot Version 1.0.2 (2022)
+# Complete LinkedIn Bot Version 1.0.3 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -12,6 +12,7 @@
 # 17-Mar-2022 - 1.0.0 - Creating the linkedin connexion function.
 # 21-Mar-2022 - 1.0.1 - Creating the bot's structure.
 # 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
+# 25-Mar-2022 - 1.0.3 - Adding adding function (automatic).
 # 
 
 from datetime import datetime
@@ -28,7 +29,8 @@ class Main():
         self.con.connect()
         self.options = {
             "1": [1, " 1. Searching function.", self.con.search],
-            "2": [2, " 2. Scrap.", self.con.connect],
+            "2": [2, " 2. Adding people.", self.con.add_people],
+            "3": [3, " 3. Scrap.", self.con.scrap],
         }
 
     def print_menu(self):
