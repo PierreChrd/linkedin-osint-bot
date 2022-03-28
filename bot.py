@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Complete LinkedIn Bot Version 1.0.4 (2022)
+# Complete LinkedIn Bot Version 1.0.5 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -14,6 +14,7 @@
 # 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
 # 25-Mar-2022 - 1.0.3 - Creating the auto-add function.
 #             - 1.0.4 - Starting the advanced scraping.
+# 28-Mar-2022 - 1.0.5 - Fixing some scrap issues.
 # 
 
 from dotenv import load_dotenv
@@ -72,7 +73,7 @@ class LinkedIn():
                 print(self.search_options["{}".format(i)][1])
             choice = int(input(">"))
 
-        research = str(input("Enter what ({}) you want to research :\n>".format(self.search_options["{}".format(i)][2])))
+        research = str(input("Enter what ({}) you want to research :\n>".format(self.search_options["{}".format(choice)][2])))
 
         for i in self.search_options:
             if choice == self.search_options["{}".format(i)][0]:
@@ -100,9 +101,15 @@ class LinkedIn():
 
     def custom_url_pagination(self, page):
         url = self.browser.current_url
-        final_str = url[:-7]
-        page_stat = f"r'\1page={page}'"
-        final_url = re.sub(r'(COMPANY_PAGE_CANNED_SEARCH&)', r'\1page=' + str(page), final_str)
+        time.sleep(0.5)
+        if "page=" in url:
+            final_str = url[:-8 - len(str(page))]
+            final_url = final_str + str(page)
+            print(final_url)
+        else:
+            final_str = url[:-8]
+            final_url = final_str + f"&page={page}"
+            print(final_url)
         self.browser.get(final_url)
 
     def scrap(self, company):
@@ -117,7 +124,7 @@ class LinkedIn():
         file.close()
 
     def scrap_company(self):
-        company = str(input("What profession do you want to find?\n>"))
+        company = str(input("What company do you want to scrap?\n>"))
         self.browser.get("https://www.linkedin.com/search/results/companies/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=u6P".format(company))
         time.sleep(1)
         # find and click on the first element
@@ -138,24 +145,23 @@ class LinkedIn():
                 spans[1].click()
         except:
             print("[x] Error...")
+            sys.exit()
         
         time.sleep(1)
         # scrap all names from first page
         self.scrap(company)
 
         time.sleep(1)
-        """
-        Ici il faut modifier toute la structure de la fonction, mon raisonnement n'est pas bon, je reviens dessus lundi quand j'aurai les idées clairs.
-        """
-        i = 2
+        
+        i = 1
         self.custom_url_pagination(i)
-        try:
-            while 1:
+        while 1:
+            try:
                 self.custom_url_pagination(i)
                 self.scrap(company)
                 i += 1
                 time.sleep(1)
-        except:
-            print("fin")
-        
+            except:
+                print("[x] Error.")
+                break
         

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# Complete LinkedIn Bot Version 1.0.4 (2022)
+# Complete LinkedIn Bot Version 1.0.5 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -14,6 +14,7 @@
 # 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
 # 25-Mar-2022 - 1.0.3 - Creating the auto-add function.
 #             - 1.0.4 - Starting the advanced scraping.
+# 28-Mar-2022 - 1.0.5 - Fixing some scrap issues.
 # 
 
 from datetime import datetime
