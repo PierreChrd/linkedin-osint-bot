@@ -1,26 +1,29 @@
 #!/usr/bin/env python
-#
-# Complete LinkedIn Bot Version 1.0.5 (2022)
+# 
+# Complete LinkedIn Bot Version 1.0.6 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
-# damage caused by this tool.  If these terms are not acceptable to you, then do
+# damage caused by this tool.  If these terms are not acceptable to you, then do 
 # not use this tool.
-#
+# 
 # by Pierre CHAUSSARD & Nathan TEBOUL
-#
-# 17-Mar-2022 - 1.0.0 - Creating the linkedin connexion function.
-# 21-Mar-2022 - 1.0.1 - Creating the bot's structure.
-# 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
-# 25-Mar-2022 - 1.0.3 - Creating the auto-add function.
-#             - 1.0.4 - Starting the advanced scraping.
-# 28-Mar-2022 - 1.0.5 - Fixing some scrap issues.
+# 
+# 17-Mar-2022 - 1.0.0 - [Add] linkedin connexion function.
+# 21-Mar-2022 - 1.0.1 - [Add] bot's structure.
+# 23-Mar-2022 - 1.0.2 - [Fix] searching function.
+# 25-Mar-2022 - 1.0.3 - [Add] the auto-add function.
+#             - 1.0.4 - [Add] the advanced scraping.
+# 28-Mar-2022 - 1.0.5 - [Fix] scrap issues.
+# 30-Mar-2022 - 1.0.6 - [Add] automatic acceptance of invitations, 
+#                     - [Fix] scrap function.
 # 
 
+from cmath import exp
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time,re, os, sys, random
+import time, os, sys, random
 
 
 class LinkedIn():
@@ -99,18 +102,10 @@ class LinkedIn():
             elif button.text == "En attente": 
                 print(button.text)
 
-    def custom_url_pagination(self, page):
-        url = self.browser.current_url
-        time.sleep(0.5)
-        if "page=" in url:
-            final_str = url[:-8 - len(str(page))]
-            final_url = final_str + str(page)
-            print(final_url)
-        else:
-            final_str = url[:-8]
-            final_url = final_str + f"&page={page}"
-            print(final_url)
-        self.browser.get(final_url)
+    def custom_url_pagination(self, base_url, page):
+        final_url = base_url[:-7]
+        print(final_url + "page=" + str(page))
+        self.browser.get(final_url + "page=" + str(page))
 
     def scrap(self, company):
         names = self.browser.find_elements_by_class_name("visually-hidden")
@@ -143,25 +138,35 @@ class LinkedIn():
                 spans = self.browser.find_elements_by_class_name(class_name_2)
                 # self.browser.find_element_by_class_name(class_name_2)
                 spans[1].click()
-        except:
-            print("[x] Error...")
+        except Exception as e:
+            print("[!] Error : " + str(e))
             sys.exit()
         
         time.sleep(1)
-        # scrap all names from first page
-        self.scrap(company)
-
+        url = self.browser.current_url
         time.sleep(1)
-        
+
         i = 1
-        self.custom_url_pagination(i)
         while 1:
             try:
-                self.custom_url_pagination(i)
+                time.sleep(1)
+                self.custom_url_pagination(url, i)
                 self.scrap(company)
                 i += 1
-                time.sleep(1)
-            except:
-                print("[x] Error.")
+                try:
+                    if self.browser.find_element_by_class_name("artdeco-empty-state__headline"):
+                        break
+                except:
+                    pass
+            except Exception as e:
+                print("[!] Error : " + str(e))
                 break
-        
+
+    def accept_invits(self):
+        self.browser.get("https://www.linkedin.com/mynetwork/invitation-manager/")
+        time.sleep(1)
+        invits = self.browser.find_elements_by_class_name("artdeco-button")
+        for invit in invits:
+            if invit.text == "Accepter":
+                invit.click()
+                time.sleep(0.3)

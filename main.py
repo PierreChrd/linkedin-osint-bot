@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# Complete LinkedIn Bot Version 1.0.5 (2022)
+# Complete LinkedIn Bot Version 1.0.6 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -9,18 +9,17 @@
 # 
 # by Pierre CHAUSSARD & Nathan TEBOUL
 # 
-# 17-Mar-2022 - 1.0.0 - Creating the linkedin connexion function.
-# 21-Mar-2022 - 1.0.1 - Creating the bot's structure.
-# 23-Mar-2022 - 1.0.2 - Upgrading the searching function.
-# 25-Mar-2022 - 1.0.3 - Creating the auto-add function.
-#             - 1.0.4 - Starting the advanced scraping.
-# 28-Mar-2022 - 1.0.5 - Fixing some scrap issues.
+# 17-Mar-2022 - 1.0.0 - [Add] linkedin connexion function.
+# 21-Mar-2022 - 1.0.1 - [Add] bot's structure.
+# 23-Mar-2022 - 1.0.2 - [Fix] searching function.
+# 25-Mar-2022 - 1.0.3 - [Add] the auto-add function.
+#             - 1.0.4 - [Add] the advanced scraping.
+# 28-Mar-2022 - 1.0.5 - [Fix] scrap issues.
+# 30-Mar-2022 - 1.0.6 - [Add] automatic acceptance of invitations, 
+#                     - [Fix] scrap function.
 # 
 
-from datetime import datetime
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import time, os, sys, pyfiglet, random
+import sys, pyfiglet
 from bot import *
 
 
@@ -32,7 +31,8 @@ class Main():
         self.options = {
             "1": [1, " 1. Searching function.", self.con.search],
             "2": [2, " 2. Adding people.", self.con.add_people],
-            "3": [3, " 3. Scrap.", self.con.scrap_company],
+            "3": [3, " 3. Accept invitations.", self.con.accept_invits],
+            "4": [4, " 4. Scrap company.", self.con.scrap_company],
         }
 
     def print_menu(self):
@@ -67,3 +67,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("\n[x] Exiting Program !")
         sys.exit()  
+    except Exception as e:
+        print("[!] Error : " + str(e))
