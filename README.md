@@ -1,6 +1,10 @@
 # Bot LinkedIn
 ```
-
+ _     ___ _   _ _  _______ ____ ___ _   _   ____   ___ _____ 
+| |   |_ _| \ | | |/ / ____|  _ \_ _| \ | | | __ ) / _ \_   _|
+| |    | ||  \| | ' /|  _| | | | | ||  \| | |  _ \| | | || |
+| |___ | || |\  | . \| |___| |_| | || |\  |_| |_) | |_| || |
+|_____|___|_| \_|_|\_\_____|____/___|_| \_(_)____/ \___/ |_|
 ```
 ## Présentation
 Script Python (réalisé par [Pierre Chaussard](https://github.com/PierreChrd) & [Nathan Teboul](https://github.com/NathanNT)) permet de créer un bot LinkedIn et de créer un réseau permettant d'extraire des informations en se basant sur des recherches via nom d'entreprise ou nom d'utilisateur.
@@ -26,8 +30,8 @@ pip install -r requirements.txt
 2. Alimentez le pour qu'il soit "crédible, cohérent avec ce que vous voulez en faire".
 3. Dans le dossier du Bot, créez un fichier nommé : `.env` et ajoutez y les lignes de code suivantes (en remplaçant "adresse mail" et "mot de passe" par vos identifiants de connexion LinkedIn):
 ```env
-linkedin_username="adresse mail"
-linkedin_password="mot de passe"
+linkedin_username="adresse_mail"
+linkedin_password="mot_de_passe"
 ```
 
 ## Utilisation

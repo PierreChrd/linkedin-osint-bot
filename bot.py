@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# Complete LinkedIn Bot Version 1.0.6 (2022)
+# Complete LinkedIn Bot Version 1.0.7 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -9,14 +9,15 @@
 # 
 # by Pierre CHAUSSARD & Nathan TEBOUL
 # 
-# 17-Mar-2022 - 1.0.0 - [Add] linkedin connexion function.
-# 21-Mar-2022 - 1.0.1 - [Add] bot's structure.
-# 23-Mar-2022 - 1.0.2 - [Fix] searching function.
-# 25-Mar-2022 - 1.0.3 - [Add] the auto-add function.
-#             - 1.0.4 - [Add] the advanced scraping.
-# 28-Mar-2022 - 1.0.5 - [Fix] scrap issues.
-# 30-Mar-2022 - 1.0.6 - [Add] automatic acceptance of invitations, 
-#                     - [Fix] scrap function.
+# 17-Mar-2022 - 1.0.0 - [Add] Linkedin connexion function.
+# 21-Mar-2022 - 1.0.1 - [Add] Bot's structure.
+# 23-Mar-2022 - 1.0.2 - [Fix] Searching function.
+# 25-Mar-2022 - 1.0.3 - [Add] Auto-add function.
+#             - 1.0.4 - [Add] Advanced scraping.
+# 28-Mar-2022 - 1.0.5 - [Fix] Scrap issues.
+# 30-Mar-2022 - 1.0.6 - [Add] Automatic acceptance of invitations, 
+#                     - [Fix] Scrap function.
+# 31-Mar-2022 - 1.0.7 - [Fix] Scrap + invitation.
 # 
 
 from cmath import exp
@@ -29,8 +30,7 @@ import time, os, sys, random
 class LinkedIn():
     def __init__(self):
         self.browser = webdriver.Firefox()
-        self.browser.get(
-            'https://www.linkedin.com/login/fr?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin')
+        self.browser.get('https://www.linkedin.com/login/fr?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin')
         self.body = self.browser.find_element_by_tag_name('body')
         self.search_options = {
             "1": [1, " 1. Companies.", "companies"],
@@ -39,9 +39,9 @@ class LinkedIn():
         }
 
     def section_print(self, title):
-        print("\n" + "=" * 50)
+        print("\n" + "=" * 58)
         print(title)
-        print("=" * 50)
+        print("=" * 58)
 
     def fill_word(self, word, xpath):
         elem = self.browser.find_element_by_xpath(xpath)
@@ -84,23 +84,38 @@ class LinkedIn():
                     self.search_options["{}".format(i)][2], research))
 
     def add_people(self):
-        research = str(input("What profession do you want to find?\n>"))
+        self.section_print("ADDING PEOPLE")
+        research = str(input("What [company/people/profession] do you want to find?\n>"))
         self.browser.get("https://www.linkedin.com/search/results/people/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=KOm".format(research))
 
-        buttons = self.browser.find_elements_by_class_name("artdeco-button")
-        for button in buttons:
-            time.sleep(0.5)
-            rand = random.uniform(0.6, 1.2)
-            if button.text == "Se connecter": 
-                time.sleep(rand)
-                button.click()
-                spans = self.browser.find_elements_by_class_name("artdeco-button__text")
-                for span in spans:
-                    if span.text == "Envoyer" :
+        i = 2
+        url = self.browser.current_url
+        while 1:
+            buttons = self.browser.find_elements_by_class_name("artdeco-button")
+            for button in buttons:
+                time.sleep(0.5)
+                rand = random.uniform(0.6, 1.2)
+                if button.text == "Se connecter": 
+                    time.sleep(rand)
+                    button.click()
+                    try:
+                        spans = self.browser.find_elements_by_class_name("artdeco-button__text")
+                        for span in spans:
+                            if span.text == "Envoyer" :
+                                time.sleep(rand/2)
+                                span.click()
                         time.sleep(rand/2)
-                        span.click()
-            elif button.text == "En attente": 
-                print(button.text)
+                        exit_btn = self.browser.find_element_by_class_name("artdeco-modal__dismiss")
+                        time.sleep(rand/2)
+                        if exit_btn:
+                            exit_btn.click()
+                    except:
+                        pass
+                elif button.text == "En attente": 
+                    print(button.text)
+
+            self.custom_url_pagination(url, i)
+            i += 1
 
     def custom_url_pagination(self, base_url, page):
         final_url = base_url[:-7]
@@ -109,7 +124,7 @@ class LinkedIn():
 
     def scrap(self, company):
         names = self.browser.find_elements_by_class_name("visually-hidden")
-        with open("src/{}.csv".format(company), 'a', encoding='utf-8') as file:
+        with open("src/{}.txt".format(company), 'a', encoding='utf-8') as file:
             for name in names:
                 # print(name.text)
                 if "Voir le profil de" in name.text:
@@ -119,6 +134,7 @@ class LinkedIn():
         file.close()
 
     def scrap_company(self):
+        self.section_print("SCRAP COMPANY")
         company = str(input("What company do you want to scrap?\n>"))
         self.browser.get("https://www.linkedin.com/search/results/companies/?keywords={}&origin=SWITCH_SEARCH_VERTICAL&sid=u6P".format(company))
         time.sleep(1)
@@ -134,10 +150,13 @@ class LinkedIn():
             if self.browser.find_element_by_class_name(class_name):
                 # print(self.browser.find_element_by_class_name(class_name).text)
                 self.browser.find_element_by_class_name(class_name).click()
-            else :
+            if self.browser.find_elements_by_class_name(class_name_2):
                 spans = self.browser.find_elements_by_class_name(class_name_2)
                 # self.browser.find_element_by_class_name(class_name_2)
-                spans[1].click()
+                # spans[1].click()
+                for span in spans:
+                    if "Voir les" in span.text:
+                        span.click()
         except Exception as e:
             print("[!] Error : " + str(e))
             sys.exit()
@@ -163,10 +182,12 @@ class LinkedIn():
                 break
 
     def accept_invits(self):
+        self.section_print("ACCEPT INVITATION")
         self.browser.get("https://www.linkedin.com/mynetwork/invitation-manager/")
         time.sleep(1)
         invits = self.browser.find_elements_by_class_name("artdeco-button")
         for invit in invits:
             if invit.text == "Accepter":
                 invit.click()
-                time.sleep(0.3)
+            time.sleep(1)
+        # [!] Error : Message: The element reference of <button id="ember51" class="artdeco-button artdeco-button--1 artdeco-button--tertiary ember-view invitation-card__message-btn invitation-card__message-btn--entry-point t-14 link-without-hover-state"> is stale; either the element is no longer attached to the DOM, it is not in the current frame context, or the document has been refreshed

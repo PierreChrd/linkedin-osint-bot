@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# Complete LinkedIn Bot Version 1.0.6 (2022)
+# Complete LinkedIn Bot Version 1.0.7 (2022)
 #
 # This tool may be used for legal purposes only.  Users take full responsibility
 # for any actions performed using this tool. The author accepts no liability for
@@ -9,14 +9,15 @@
 # 
 # by Pierre CHAUSSARD & Nathan TEBOUL
 # 
-# 17-Mar-2022 - 1.0.0 - [Add] linkedin connexion function.
-# 21-Mar-2022 - 1.0.1 - [Add] bot's structure.
-# 23-Mar-2022 - 1.0.2 - [Fix] searching function.
-# 25-Mar-2022 - 1.0.3 - [Add] the auto-add function.
-#             - 1.0.4 - [Add] the advanced scraping.
-# 28-Mar-2022 - 1.0.5 - [Fix] scrap issues.
-# 30-Mar-2022 - 1.0.6 - [Add] automatic acceptance of invitations, 
-#                     - [Fix] scrap function.
+# 17-Mar-2022 - 1.0.0 - [Add] Linkedin connexion function.
+# 21-Mar-2022 - 1.0.1 - [Add] Bot's structure.
+# 23-Mar-2022 - 1.0.2 - [Fix] Searching function.
+# 25-Mar-2022 - 1.0.3 - [Add] Auto-add function.
+#             - 1.0.4 - [Add] Advanced scraping.
+# 28-Mar-2022 - 1.0.5 - [Fix] Scrap issues.
+# 30-Mar-2022 - 1.0.6 - [Add] Automatic acceptance of invitations, 
+#                     - [Fix] Scrap function.
+# 31-Mar-2022 - 1.0.7 - [Fix] Scrap + invitation.
 # 
 
 import sys, pyfiglet
